@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="吴恩达机器学习  确定执行的优先级建立垃圾邮件分类器构建特征向量x￼ ￼ 误差分析一种推荐做法 快速、简单实现：面对一个机器学习的问题时，用一种简单的算法快速实现，并在交叉验证集上测试。 画出学习曲线：根据学习曲线来帮助判断是需要更多的数据，还是更多的特征等；相当于是一种指导作用。 误差分析：观察交叉验证集里经常被错误分类的输入，有什么共同的特征和规律；这可能对设计特征有所启发，或者根据现有系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ML】机器学习的系统设计">
+<meta property="og:url" content="http://yoursite.com/2020/11/16/ml-9/index.html">
+<meta property="og:site_name" content="一杯西瓜汁er🍉">
+<meta property="og:description" content="吴恩达机器学习  确定执行的优先级建立垃圾邮件分类器构建特征向量x￼ ￼ 误差分析一种推荐做法 快速、简单实现：面对一个机器学习的问题时，用一种简单的算法快速实现，并在交叉验证集上测试。 画出学习曲线：根据学习曲线来帮助判断是需要更多的数据，还是更多的特征等；相当于是一种指导作用。 误差分析：观察交叉验证集里经常被错误分类的输入，有什么共同的特征和规律；这可能对设计特征有所启发，或者根据现有系统">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/FBFDBDFE-C66E-434D-BEF4-7B1CF0A88F0C.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/E95C38F0-C941-4676-A213-BED1936A6DC3.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/56D9DFD0-F6FD-4632-A872-95C0971D48CE.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/CBFAE3D3-D1A4-4046-8FA5-9E732B2B96C8.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/9885B79C-A8D3-43F5-916A-9BA7EB82E798.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/EB189A76-BDE2-42A3-8303-4F66CCBFDC4F.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/1E442B58-1DD0-4C96-96A0-3804424D10AF.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/EFEBDC12-C924-44EC-8B7E-B1961539F1A7.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/E3F793F3-512F-4E15-AC1F-DE1D308503B8.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/22452C27-0238-4D38-AD6C-6456AECDFC37.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/4F53074E-4A03-468F-84BD-7139C8714E59.jpg">
+<meta property="article:published_time" content="2020-11-16T07:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-25T06:37:30.302Z">
+<meta property="article:author" content="Christy">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.sparkling.land/christy/images/FBFDBDFE-C66E-434D-BEF4-7B1CF0A88F0C.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/11/16/ml-9/"/>
+
+
+
+
+
+  <title>【ML】机器学习的系统设计 | 一杯西瓜汁er🍉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯西瓜汁er🍉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/16/ml-9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Christy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯西瓜汁er🍉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【ML】机器学习的系统设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-16T07:00:00+00:00">
+                2020-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>吴恩达机器学习</p>
+</blockquote>
+<h2 id="确定执行的优先级"><a href="#确定执行的优先级" class="headerlink" title="确定执行的优先级"></a>确定执行的优先级</h2><h3 id="建立垃圾邮件分类器"><a href="#建立垃圾邮件分类器" class="headerlink" title="建立垃圾邮件分类器"></a>建立垃圾邮件分类器</h3><p>构建特征向量x<br><img src="https://cdn.sparkling.land/christy/images/FBFDBDFE-C66E-434D-BEF4-7B1CF0A88F0C.jpg" alt="image">￼</p>
+<p><img src="https://cdn.sparkling.land/christy/images/E95C38F0-C941-4676-A213-BED1936A6DC3.jpg" alt="image">￼</p>
+<h2 id="误差分析"><a href="#误差分析" class="headerlink" title="误差分析"></a>误差分析</h2><h3 id="一种推荐做法"><a href="#一种推荐做法" class="headerlink" title="一种推荐做法"></a>一种推荐做法</h3><ol>
+<li>快速、简单实现：面对一个机器学习的问题时，用一种简单的算法快速实现，并在交叉验证集上测试。</li>
+<li>画出学习曲线：根据学习曲线来<strong>帮助判断</strong>是需要更多的数据，还是更多的特征等；相当于是一种指导作用。</li>
+<li>误差分析：<strong>观察</strong>交叉验证集里经常被错误分类的输入，有什么共同的特征和规律；这可能对设计特征有所启发，或者根据现有系统的优缺点进行指导改进。</li>
+</ol>
+<h3 id="误差分析-1"><a href="#误差分析-1" class="headerlink" title="误差分析"></a>误差分析</h3><p><img src="https://cdn.sparkling.land/christy/images/56D9DFD0-F6FD-4632-A872-95C0971D48CE.jpg" alt="image">￼</p>
+<h3 id="数值评价指标"><a href="#数值评价指标" class="headerlink" title="数值评价指标"></a>数值评价指标</h3><p><img src="https://cdn.sparkling.land/christy/images/CBFAE3D3-D1A4-4046-8FA5-9E732B2B96C8.jpg" alt="image">￼</p>
+<p>Note：<br><strong>在交叉验证集上做误差分析，而不是在测试集上做误差分析。</strong></p>
+<h2 id="不对称性分类的误差评估"><a href="#不对称性分类的误差评估" class="headerlink" title="不对称性分类的误差评估"></a>不对称性分类的误差评估</h2><h3 id="斜偏类"><a href="#斜偏类" class="headerlink" title="斜偏类"></a>斜偏类</h3><p>使用一个合适的误差度量，有助于解决<strong>斜偏类问题</strong>。</p>
+<p>🌰<br><img src="https://cdn.sparkling.land/christy/images/9885B79C-A8D3-43F5-916A-9BA7EB82E798.jpg" alt="image">￼</p>
+<p>问题发生在：正例与负例的比例非常接近于一个极端情况。<br>本🌰中，正样本数量很少很少，负样本数量很多很多。</p>
+<p>思考：<br>accuracy从99.2%提高到99.5%，意义大吗？</p>
+<h3 id="精确率、召回率"><a href="#精确率、召回率" class="headerlink" title="精确率、召回率"></a>精确率、召回率</h3><p><img src="https://cdn.sparkling.land/christy/images/EB189A76-BDE2-42A3-8303-4F66CCBFDC4F.jpg" alt="image">￼</p>
+<p><strong>精确率和召回率均越高越好。</strong></p>
+<h2 id="精确率和召回率的权衡"><a href="#精确率和召回率的权衡" class="headerlink" title="精确率和召回率的权衡"></a>精确率和召回率的权衡</h2><p><img src="https://cdn.sparkling.land/christy/images/1E442B58-1DD0-4C96-96A0-3804424D10AF.jpg" alt="image">￼</p>
+<h3 id="F1分数"><a href="#F1分数" class="headerlink" title="F1分数"></a>F1分数</h3><p><img src="https://cdn.sparkling.land/christy/images/EFEBDC12-C924-44EC-8B7E-B1961539F1A7.jpg" alt="image">￼</p>
+<p>F1会考虑一部分P和R的平均值，但会给值较低的一方更高的权重。</p>
+<h2 id="机器学习数据"><a href="#机器学习数据" class="headerlink" title="机器学习数据"></a>机器学习数据</h2><p><img src="https://cdn.sparkling.land/christy/images/E3F793F3-512F-4E15-AC1F-DE1D308503B8.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/22452C27-0238-4D38-AD6C-6456AECDFC37.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/4F53074E-4A03-468F-84BD-7139C8714E59.jpg" alt="image">￼</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/15/ml-8/" rel="next" title="【ML】学习曲线">
+                <i class="fa fa-chevron-left"></i> 【ML】学习曲线
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/17/ml-10/" rel="prev" title="【ML】聚类">
+                【ML】聚类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="Christy" />
+            
+              <p class="site-author-name" itemprop="name">Christy</p>
+              <p class="site-description motion-element" itemprop="description">保持热情:)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+                <a href="/archives">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/christy99cc" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#确定执行的优先级"><span class="nav-number">1.</span> <span class="nav-text">确定执行的优先级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#建立垃圾邮件分类器"><span class="nav-number">1.1.</span> <span class="nav-text">建立垃圾邮件分类器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#误差分析"><span class="nav-number">2.</span> <span class="nav-text">误差分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一种推荐做法"><span class="nav-number">2.1.</span> <span class="nav-text">一种推荐做法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#误差分析-1"><span class="nav-number">2.2.</span> <span class="nav-text">误差分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数值评价指标"><span class="nav-number">2.3.</span> <span class="nav-text">数值评价指标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不对称性分类的误差评估"><span class="nav-number">3.</span> <span class="nav-text">不对称性分类的误差评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#斜偏类"><span class="nav-number">3.1.</span> <span class="nav-text">斜偏类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#精确率、召回率"><span class="nav-number">3.2.</span> <span class="nav-text">精确率、召回率</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#精确率和召回率的权衡"><span class="nav-number">4.</span> <span class="nav-text">精确率和召回率的权衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#F1分数"><span class="nav-number">4.1.</span> <span class="nav-text">F1分数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#机器学习数据"><span class="nav-number">5.</span> <span class="nav-text">机器学习数据</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2020 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Christy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> </div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

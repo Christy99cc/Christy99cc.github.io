@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="吴恩达机器学习无监督学习  数据压缩❓降维是什么 二维降到一维有一组数据，有两个特征x1，x2，这两个特征中，x1表示单位是厘米的长度，x2表示单位是英尺的长度。这样的话，就存在冗余。我们可以用一个数字来代表原来的两个数字，也就是用一维的数据代表原来二维的数据。￼ 三维降到二维这组数据，实际上分布在一个平面上￼ 数据可视化￼￼￼ PCAPCA是找一个低维平面，把数据投影在上面，使这些蓝色线段的长">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【ML】降维">
+<meta property="og:url" content="http://yoursite.com/2020/11/17/ml-11/index.html">
+<meta property="og:site_name" content="一杯西瓜汁er🍉">
+<meta property="og:description" content="吴恩达机器学习无监督学习  数据压缩❓降维是什么 二维降到一维有一组数据，有两个特征x1，x2，这两个特征中，x1表示单位是厘米的长度，x2表示单位是英尺的长度。这样的话，就存在冗余。我们可以用一个数字来代表原来的两个数字，也就是用一维的数据代表原来二维的数据。￼ 三维降到二维这组数据，实际上分布在一个平面上￼ 数据可视化￼￼￼ PCAPCA是找一个低维平面，把数据投影在上面，使这些蓝色线段的长">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/B7C3FA87-E292-4C8A-95BC-8C592E2F2B59.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/1E83E19B-7242-4FA0-B03D-A1E65212F15E.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/FA4488E0-FBD6-4E45-A614-30AAD4249F43.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/EDC770A2-C8DB-430A-9F8B-CCA3BE00CD99.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/E512FABA-CB00-4BFE-B9C1-4873FB32965F.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/1E3B2252-AB78-49A6-B061-799F995A285B.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/BDB29E77-6288-44EA-81E4-F14C1C143CC2.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/12ABED9F-EDB6-4E6F-A11B-0B84829E97FC.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/F37F805E-84C8-4D05-8570-6B32AB9239B8.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/56EFF92A-FA4D-4A1A-BF75-8C4BB0B5F4E1.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/8C166EAD-0655-49FA-9D2E-83B5FA06AC78.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/43919679-9B12-42A1-B7F8-C58046ED46AC.jpg">
+<meta property="og:image" content="https://cdn.sparkling.land/christy/images/D993300C-6470-4988-9DCD-F1192D1FE273.jpg">
+<meta property="article:published_time" content="2020-11-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-25T06:37:30.302Z">
+<meta property="article:author" content="Christy">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.sparkling.land/christy/images/B7C3FA87-E292-4C8A-95BC-8C592E2F2B59.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/11/17/ml-11/"/>
+
+
+
+
+
+  <title>【ML】降维 | 一杯西瓜汁er🍉</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯西瓜汁er🍉</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/17/ml-11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Christy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯西瓜汁er🍉">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【ML】降维</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-17T16:00:00+00:00">
+                2020-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>吴恩达机器学习<br>无监督学习</p>
+</blockquote>
+<h2 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h2><p>❓降维是什么</p>
+<h3 id="二维降到一维"><a href="#二维降到一维" class="headerlink" title="二维降到一维"></a>二维降到一维</h3><p>有一组数据，有两个特征x1，x2，这两个特征中，x1表示单位是厘米的长度，x2表示单位是英尺的长度。这样的话，就存在冗余。<br>我们可以用一个数字来代表原来的两个数字，也就是用一维的数据代表原来二维的数据。<br><img src="https://cdn.sparkling.land/christy/images/B7C3FA87-E292-4C8A-95BC-8C592E2F2B59.jpg" alt="image">￼</p>
+<h3 id="三维降到二维"><a href="#三维降到二维" class="headerlink" title="三维降到二维"></a>三维降到二维</h3><p>这组数据，实际上分布在一个平面上<br><img src="https://cdn.sparkling.land/christy/images/1E83E19B-7242-4FA0-B03D-A1E65212F15E.jpg" alt="image">￼</p>
+<h2 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h2><p><img src="https://cdn.sparkling.land/christy/images/FA4488E0-FBD6-4E45-A614-30AAD4249F43.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/EDC770A2-C8DB-430A-9F8B-CCA3BE00CD99.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/E512FABA-CB00-4BFE-B9C1-4873FB32965F.jpg" alt="image">￼</p>
+<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>PCA是找一个低维平面，把数据投影在上面，使这些蓝色线段的长度和最小。这个蓝色线段长度也叫做投影误差，PCA想要最小化这个距离。<br><img src="https://cdn.sparkling.land/christy/images/1E3B2252-AB78-49A6-B061-799F995A285B.jpg" alt="image">￼</p>
+<h3 id="PCA与线性回归的关系？"><a href="#PCA与线性回归的关系？" class="headerlink" title="PCA与线性回归的关系？"></a>PCA与线性回归的关系？</h3><p>PCA不是线性回归！</p>
+<p><img src="https://cdn.sparkling.land/christy/images/BDB29E77-6288-44EA-81E4-F14C1C143CC2.jpg" alt="image">￼</p>
+<p>| 线性回归（左图） | PCA（右图） |<br>| 最小化的是竖直距离，蓝色的线段 | 最小化的是投影到直线的距离，蓝色的线段 |<br>| 有一个y，要预测这个y | 都是x，没有区别对待，要用所有的这些x预测y |<br>￼</p>
+<h3 id="PCA算法"><a href="#PCA算法" class="headerlink" title="PCA算法"></a>PCA算法</h3><p>PCA参考下面的blog，很好理解，相应的线性代数的知识可以补充看看。<br><a href="http://blog.codinglabs.org/articles/pca-tutorial.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/pca-tutorial.html</a>￼</p>
+<h2 id="关于K的选择"><a href="#关于K的选择" class="headerlink" title="关于K的选择"></a>关于K的选择</h2><p><img src="https://cdn.sparkling.land/christy/images/12ABED9F-EDB6-4E6F-A11B-0B84829E97FC.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/F37F805E-84C8-4D05-8570-6B32AB9239B8.jpg" alt="image">￼</p>
+<h2 id="PCA的应用"><a href="#PCA的应用" class="headerlink" title="PCA的应用"></a>PCA的应用</h2><p><img src="https://cdn.sparkling.land/christy/images/56EFF92A-FA4D-4A1A-BF75-8C4BB0B5F4E1.jpg" alt="image">￼<br><img src="https://cdn.sparkling.land/christy/images/8C166EAD-0655-49FA-9D2E-83B5FA06AC78.jpg" alt="image">￼</p>
+<p><img src="https://cdn.sparkling.land/christy/images/43919679-9B12-42A1-B7F8-C58046ED46AC.jpg" alt="image">￼<br>PCA降维虽然可能避免过拟合，但是这不是一个好的解决方案；过拟合还是要通过＋正则化项来解决。<br><img src="https://cdn.sparkling.land/christy/images/D993300C-6470-4988-9DCD-F1192D1FE273.jpg" alt="image">￼</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/17/ml-10/" rel="next" title="【ML】聚类">
+                <i class="fa fa-chevron-left"></i> 【ML】聚类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/18/ml-12/" rel="prev" title="【ML】异常检测">
+                【ML】异常检测 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="Christy" />
+            
+              <p class="site-author-name" itemprop="name">Christy</p>
+              <p class="site-description motion-element" itemprop="description">保持热情:)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+                <a href="/archives">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/christy99cc" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据压缩"><span class="nav-number">1.</span> <span class="nav-text">数据压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二维降到一维"><span class="nav-number">1.1.</span> <span class="nav-text">二维降到一维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三维降到二维"><span class="nav-number">1.2.</span> <span class="nav-text">三维降到二维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据可视化"><span class="nav-number">2.</span> <span class="nav-text">数据可视化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA"><span class="nav-number">3.</span> <span class="nav-text">PCA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PCA与线性回归的关系？"><span class="nav-number">3.1.</span> <span class="nav-text">PCA与线性回归的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCA算法"><span class="nav-number">3.2.</span> <span class="nav-text">PCA算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于K的选择"><span class="nav-number">4.</span> <span class="nav-text">关于K的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA的应用"><span class="nav-number">5.</span> <span class="nav-text">PCA的应用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2020 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Christy</span>
+
+  
+</div>
+
+
+  <div class="powered-by">powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> </div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
